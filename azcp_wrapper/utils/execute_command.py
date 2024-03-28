@@ -11,20 +11,20 @@ def execute_command(cmd: List[str]) -> Generator[Union[WindowsPath, str], None, 
     Executes a command while simultaneously sending output.
     """
     logger.info(f"Executing command -> {' '.join(str(ruta) for ruta in cmd)}")
-    # popen = subprocess.Popen(
-    #     cmd,
-    #     stdout=subprocess.PIPE,
-    #     stderr=subprocess.PIPE,
-    #     universal_newlines=True,
-    #     env=os.environ.copy(),
-    # )
+    popen = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+        env=os.environ.copy(),
+    )
 
-    # if popen.stdout is not None:
-    #     for stdout_line in iter(popen.stdout.readline, ""):
-    #         yield stdout_line
+    if popen.stdout is not None:
+        for stdout_line in iter(popen.stdout.readline, ""):
+            yield stdout_line
 
-    #     popen.stdout.close()
-    #     return_code = popen.wait()
+        popen.stdout.close()
+        return_code = popen.wait()
 
-    #     if return_code:
-    #         raise subprocess.CalledProcessError(return_code, cmd)
+        if return_code:
+            raise subprocess.CalledProcessError(return_code, cmd)
