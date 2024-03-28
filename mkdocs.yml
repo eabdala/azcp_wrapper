@@ -1,0 +1,86 @@
+site_name: azcp_wrapper Doc
+
+repo_name: eabdala/azcp_wrapper
+repo_url: https://github.com/eabdala/azcp_wrapper
+# edit_uri: ""
+
+theme:
+  name: material
+  palette:
+  - media: '(prefers-color-scheme: light)'
+    scheme: default
+    primary: blue
+    accent: light blue
+    toggle:
+      icon: material/lightbulb
+      name: Switch to dark mode
+  - media: '(prefers-color-scheme: dark)'
+    scheme: slate
+    primary: blue
+    accent: light blue
+    toggle:
+      icon: material/lightbulb-outline
+      name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+
+  features:
+  - navigation.instant
+  - navigation.instant.progress
+  - navigation.top
+  - search.suggest
+  - search.highlight
+  - content.tabs.link
+  - navigation.indexes
+  - content.tooltips
+  - navigation.path
+  - content.code.annotate
+  - content.code.copy
+  - content.code.select
+  # - navigation.tabs
+
+nav:
+  - Inicio: index.md
+  - Examples:
+    - down.ipynb
+  # - Run: run.md
+  # - Diagrama: diagram.md
+
+plugins:
+  - mkdocs-jupyter
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - markdown.extensions.codehilite:
+      guess_lang: false
+  - admonition
+  - codehilite
+  - extra
+  - pymdownx.details
+  - pymdownx.superfences
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format ''
+  - pymdownx.tabbed:
+      alternate_style: true
+  - mdx_include:
+      base_path: docs
+
+
+copyright: Copyright &copy; 2024 Erik Alejandro Abdala
+
+extra_css:
+  - css/termynal.css
+  - css/custom.css
+
+extra_javascript:
+  - https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js
+  - js/termynal.js
+  - js/custom.js
