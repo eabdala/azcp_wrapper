@@ -16,10 +16,10 @@ local_location = AzLocalLocation(
 )
 remote_location = AzRemoteSASLocation(
     storage_account='arlandingstoragedesa',
-    container="solicitudes-temis",
-    blob_or_file = 'file',
-    path="reportes",
-    sas_token="sv=2022-11-02&ss=f&srt=sco&sp=rwdlc&se=2100-01-01T02:59:59Z&st=2024-01-16T20:13:42Z&spr=https&sig=LxaXIgF8M1jruy5clPv2l%2BRLUWZ6%2Bx9iBAgI75UP0sU%3D",
+    container="landing-temis",
+    blob_or_file = 'blob',
+    path="cdrs",
+    sas_token="sp=racwdlme&st=2023-12-06T18:20:20Z&se=2100-01-01T02:20:20Z&spr=https&sv=2022-11-02&sr=c&sig=5POkIL6W3pVjslA26mbW%2BZYTr4SoPrs4VhCLIf9YKdM%3D",
 )
 
 transfer_options = AzCopyOptions(
@@ -28,6 +28,6 @@ transfer_options = AzCopyOptions(
     put_md5=True, )
 
 
-az_client = AzClient()
+az_client = AzClient(process_name='EL QUE ESTE POR CORRER')
 
 azcp = az_client.copy(src=local_location, dest=remote_location, transfer_options=transfer_options)
