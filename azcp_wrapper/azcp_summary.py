@@ -7,17 +7,17 @@ def get_property_value(key: str, job_summary: str) -> int:
     property_value = 0
 
     try:
-        property_key_match = re.search(r"{}: \d+\n".format(key), job_summary)
-
+        property_key_match = re.search(r"{}: (\d+(\.\d+)?)".format(re.escape(key)), job_summary)
+        # print(r"{}: (\d+(\.\d+)?)".format(re.escape(key)),property_key_match)
         if property_key_match is not None:
 
             property_key_text = property_key_match.group()
-            property_value_match = re.search(r"\d+", property_key_text)
+            property_value_match = re.search(r"(\d+(\.\d+)?)", property_key_text)
 
             # If the property key text exists in the job summary,
             # the gets the property value
             if property_value_match is not None:
-                property_value = int(property_value_match.group())
+                property_value = str(property_value_match.group())
     except Exception as e:
         print(e)
 
@@ -30,14 +30,13 @@ def get_transfer_copy_summary_info(
     """
     Extract all properties of Job Info from the Azcopy job summary
     """
-
     properties_required = [
         "Number of File Transfers",
         "Number of Folder Property Transfers",
         "Number of File Transfers",
         "Total Number of Transfers",
         "Number of Transfers Completed",
-        "Number of Transfers Failed",
+        "Number of File Transfers Skipped",
         "Number of Transfers Skipped",
     ]
 
@@ -50,8 +49,11 @@ def get_transfer_copy_summary_info(
         # Set the attribute in job_info object
         setattr(job_info, property_attribute, property_value)
 
+    job_info.elapsed_time_minutes = get_property_value(
+        "Elapsed Time (Minutes)", summary
+    )
     job_info.total_bytes_transferred = get_property_value(
-        "TotalBytesTransferred", summary
+        "Total Number of Bytes Transferred", summary
     )
 
     return job_info

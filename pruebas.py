@@ -12,7 +12,7 @@ load_dotenv()
 
 local_location = AzLocalLocation(
     path="C:\\Users\\eabdala\\Desktop\\pruebasftp\\",
-    use_wildcard=False,
+    use_wildcard=True,
 )
 remote_location = AzRemoteSASLocation(
     storage_account='arlandingstoragedesa',
@@ -31,3 +31,5 @@ transfer_options = AzCopyOptions(
 az_client = AzClient(process_name='EL QUE ESTE POR CORRER')
 
 azcp = az_client.copy(src=local_location, dest=remote_location, transfer_options=transfer_options)
+
+print(str(azcp))

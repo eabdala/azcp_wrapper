@@ -206,6 +206,7 @@ class AzCopyJobInfo:
     def __init__(
         self,
         percent_complete: Annotated[float, Doc("")] = float(0),
+        elapsed_time_minutes: Annotated[float, Doc("")] = float(0),
         error_msg: Annotated[str, Doc("")] = "",
         final_job_status_msg: Annotated[str, Doc("")] = "",
         number_of_file_transfers: Annotated[int, Doc("")] = 0,
@@ -213,7 +214,7 @@ class AzCopyJobInfo:
         total_number_of_transfers: Annotated[int, Doc("")] = 0,
         number_of_transfers_completed: Annotated[int, Doc("")] = 0,
         number_of_transfers_failed: Annotated[int , Doc("")]= 0,
-        number_of_transfers_skipped: Annotated[int, Doc("")] = 0,
+        number_of_file_transfers_skipped: Annotated[int, Doc("")] = 0,
         total_bytes_transferred: Annotated[int, Doc("")] = 0,
         completed: Annotated[bool, Doc("")]= False,
     ) -> None:
@@ -223,6 +224,7 @@ class AzCopyJobInfo:
         # the value sent by azcopy, then azcopy fails to send the final
         # percent value and directly sends the job summary
         self.percent_complete = percent_complete
+        self.elapsed_time_minutes = elapsed_time_minutes
         self.error_msg = error_msg
         self.final_job_status_msg = final_job_status_msg
         self.number_of_file_transfers = number_of_file_transfers
@@ -230,7 +232,7 @@ class AzCopyJobInfo:
         self.total_number_of_transfers = total_number_of_transfers
         self.number_of_transfers_completed = number_of_transfers_completed
         self.number_of_transfers_failed = number_of_transfers_failed
-        self.number_of_transfers_skipped = number_of_transfers_skipped
+        self.number_of_file_transfers_skipped = number_of_file_transfers_skipped
         self.total_bytes_transferred = total_bytes_transferred
         self.completed = completed
     def __str__(self) -> str:
@@ -238,11 +240,13 @@ class AzCopyJobInfo:
         Get a human-readable string representation of the AzCopyJobInfo object.
         """
         return f"AzCopy Job Info:\n" \
+            f"Elapsed Time (Minutes): {self.elapsed_time_minutes}\n" \
                f"Percent Complete: {self.percent_complete}%\n" \
                f"Final Job Status: {self.final_job_status_msg}\n" \
+                f"Number of File Transfers: {self.number_of_file_transfers}\n" \
                f"Transfers Completed: {self.number_of_transfers_completed}\n" \
                f"Transfers Failed: {self.number_of_transfers_failed}\n" \
-               f"Transfers Skipped: {self.number_of_transfers_skipped}\n" \
+               f"Transfers Skipped: {self.number_of_file_transfers_skipped}\n" \
                f"Total Bytes Transferred: {self.total_bytes_transferred}"
 
 
