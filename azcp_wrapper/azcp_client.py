@@ -85,13 +85,13 @@ class AzClient:
         import re
 
         # Generating the command to be used for subprocess
-        # cmd = [
-        #     self.exe_to_use,
-        #     "cp",
-        #     str(src),
-        #     str(dest),
-        # ] + transfer_options.get_options_list()
-        cmd = ["python", "-V"]
+        cmd = [
+            self.exe_to_use,
+            "cp",
+            str(src),
+            str(dest),
+        ] + transfer_options.get_options_list()
+        # cmd = ["python", "-V"]
         job_info = AzCopyJobInfo()
 
         try:
