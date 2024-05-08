@@ -56,7 +56,8 @@ class AzClient:
     ) -> None:
         self.exe_to_use = (
             exe_to_use
-            if not (Path("~/.azcp/azcopy.exe").expanduser().exists() or Path("~/.azcp/azcopy").expanduser().exists())  else Path("~/.azcp/azcopy").expanduser()
+            if not (Path("~/.azcp/azcopy.exe").expanduser().exists() or Path("~/.azcp/azcopy").expanduser().exists()) 
+            else Path("~/.azcp/azcopy").expanduser()
         )
         self.process_name = process_name
         self.artefact_dir = artefact_dir
