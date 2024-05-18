@@ -1,13 +1,15 @@
 import re
 
-from azcp_wrapper.azcp_utils import AzCopyJobInfo, AzSyncJobInfo
+from azcp_wrapper.azcp_utils import AzCopyJobInfo, AzSyncJobInfo, AzListJobInfo
 
 
 def get_property_value(key: str, job_summary: str) -> int:
     property_value = 0
 
     try:
-        property_key_match = re.search(r"{}: (\d+(\.\d+)?)".format(re.escape(key)), job_summary)
+        property_key_match = re.search(
+            r"{}: (\d+(\.\d+)?)".format(re.escape(key)), job_summary
+        )
         # print(r"{}: (\d+(\.\d+)?)".format(re.escape(key)),property_key_match)
         if property_key_match is not None:
 
@@ -22,6 +24,42 @@ def get_property_value(key: str, job_summary: str) -> int:
         print(e)
 
     return property_value
+
+
+def get_transfer_list_summary_info(
+    job_info: AzListJobInfo, summary: str
+) -> AzListJobInfo:
+    """
+    Extract all properties of Job Info from the Azcopy job summary
+    """
+    properties_required = [
+        "File count",
+        "Total file size",
+    ]
+
+    for property_key in properties_required:
+
+        # Converting the property key string to attribute form
+        property_attribute = property_key.lower().replace(" ", "_")
+        property_value = get_property_value(property_key, summary)
+
+        # Set the attribute in job_info object
+        setattr(job_info, property_attribute, property_value)
+    # Crear una lista para almacenar los datos
+    file_data = []
+
+    # Usar una expresión regular para encontrar todos los pares archivo-tamaño
+    pattern = re.compile(r"INFO: ([^;]+);  Content Length: ([\d.]+ \w+)")
+    matches = pattern.findall(summary)
+
+    # Rellenar la lista con los datos encontrados
+    for match in matches:
+        file_name, content_length = match
+        file_info = {"Archivo": file_name.strip(), "peso": content_length.strip()}
+        file_data.append(file_info)
+
+    job_info.list_files = file_data
+    return job_info
 
 
 def get_transfer_copy_summary_info(
@@ -109,4 +147,3 @@ def get_sync_summary_info(sync_job_info: AzSyncJobInfo, summary: str) -> AzSyncJ
     # sync_job_info.elapsed_time_minutes = property_value
 
     return sync_job_info
-
