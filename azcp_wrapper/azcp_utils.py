@@ -285,11 +285,11 @@ class AzListJobInfo:
         """
         self.logger.info(f"AzCopy Job Info List:")
         self.logger.info(f"File count: {self.file_count}")
-        self.logger.info(f"Total file size: {self.total_file_size} GB")
+        self.logger.info(f"Total file size: {self.total_file_size}")
         return (
             f"AzCopy Job Info List:\n"
             f"File count: {self.file_count}\n"
-            f"Total file size: {self.total_file_size}GB"
+            f"Total file size: {self.total_file_size}"
         )
 
 
