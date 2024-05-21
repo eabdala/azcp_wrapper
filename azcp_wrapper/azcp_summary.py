@@ -34,7 +34,6 @@ def get_transfer_list_summary_info(
     """
     properties_required = [
         "File count",
-        "Total file size",
     ]
 
     for property_key in properties_required:
@@ -45,6 +44,15 @@ def get_transfer_list_summary_info(
 
         # Set the attribute in job_info object
         setattr(job_info, property_attribute, property_value)
+    
+    patron = r"INFO: Total file size: (\d+\.\d+) (\w+)"
+
+    # Buscar coincidencias en la cadena
+    coincidencias = re.search(patron, summary)
+    if coincidencias:
+        tamanio = coincidencias.group(1)  # El número
+        tipo = coincidencias.group(2)     # El tipo (MiB en este caso)
+    job_info.total_file_size = f"{tamanio} {tipo}"
     # Crear una lista para almacenar los datos
     file_data = []
 
