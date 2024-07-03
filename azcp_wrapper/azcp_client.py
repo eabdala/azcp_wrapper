@@ -95,6 +95,90 @@ class AzClient:
         str(job_info)
         return job_info
 
+    def remove(
+        self,
+        src: Union[AzRemoteSASLocation, AzLocalLocation],
+        transfer_options: AzCopyOptions,
+    ) -> AzCopyJobInfo:
+        cmd = [self.exe_to_use, "rm", str(src)] + transfer_options.get_options_list()
+
+        job_info = AzCopyJobInfo()
+        try:
+            summary = ""
+            # A boolean flag to be set as True when
+            # azcopy starts sending summary information
+            unlock_summary = False
+
+            for output_line in execute_command(cmd):
+                print(output_line, end="")
+
+                # Extracting the percent complete information from the
+                # current output line and updating it in the job_info
+                if "%" in output_line:
+                    percent_expression = r"(?P<percent_complete>\d+\.\d+) %,"
+                    transfer_match = re.match(percent_expression, output_line)
+
+                    if transfer_match is not None:
+                        transfer_info = transfer_match.groupdict()
+
+                        job_info.percent_complete = float(
+                            transfer_info["percent_complete"]
+                        )
+                # If azcopy has started sending summary then
+                # appending it to summary text
+                if unlock_summary:
+                    summary += output_line
+
+                # Job summary starts with line ->
+                # Job {job_id} summary
+                if output_line.startswith("Job") and "summary" in output_line:
+                    unlock_summary = True
+
+                if "AuthenticationFailed" in output_line:
+                    job_info.error_msg = output_line
+
+                if "Final Job Status:" in output_line:
+                    job_info.final_job_status_msg = output_line.split(":")[-1].strip()
+        except Exception as e:
+            # Checking if the error is because of the sas token
+            token_expiry_flag = False
+            if isinstance(dest, AzRemoteSASLocation):
+                token = str(dest.sas_token)
+                token_expiry_flag = dest.is_sas_token_session_expired(token)
+            elif isinstance(src, AzRemoteSASLocation):
+                token = str(src.sas_token)
+                token_expiry_flag = src.is_sas_token_session_expired(token)
+            else:
+                token = ""
+
+            if token_expiry_flag == True:
+                job_info.error_msg = "SAS token is expired"
+            else:
+                job_info.error_msg = str(e)
+
+            job_info.completed = False
+
+        # Get the final job summary info
+        job_info = get_transfer_copy_summary_info(job_info, summary)
+
+        if (
+            job_info.final_job_status_msg == "Completed"
+            or job_info.final_job_status_msg == "CompletedWithSkipped"
+        ):
+            job_info.completed = True
+        elif job_info.number_of_transfers_failed > 0:
+            job_info.error_msg += "; Tranfers failed = {}".format(
+                job_info.number_of_transfers_failed
+            )
+            job_info.completed = False
+            raise Exception(job_info.error_msg)
+        else:
+            job_info.error_msg += "; Error while transferring data"
+            job_info.completed = False
+            raise Exception(job_info.error_msg)
+
+        return job_info
+
     def copy(
         self,
         src: Union[AzRemoteSASLocation, AzLocalLocation],
