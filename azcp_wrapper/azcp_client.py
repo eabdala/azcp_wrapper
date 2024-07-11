@@ -142,10 +142,10 @@ class AzClient:
         except Exception as e:
             # Checking if the error is because of the sas token
             token_expiry_flag = False
-            if isinstance(dest, AzRemoteSASLocation):
-                token = str(dest.sas_token)
-                token_expiry_flag = dest.is_sas_token_session_expired(token)
-            elif isinstance(src, AzRemoteSASLocation):
+            # if isinstance(dest, AzRemoteSASLocation):
+            #     token = str(dest.sas_token)
+            #     token_expiry_flag = dest.is_sas_token_session_expired(token)
+            if isinstance(src, AzRemoteSASLocation):
                 token = str(src.sas_token)
                 token_expiry_flag = src.is_sas_token_session_expired(token)
             else:

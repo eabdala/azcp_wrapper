@@ -36,3 +36,18 @@ az_client = AzClient(process_name="EL QUE ESTE POR CORRER")
 # azcp = az_client.copy(src=local_location, dest=remote_location, transfer_options=transfer_options)
 azcp = az_client.remove(src=remote_location, transfer_options=transfer_options)
 print(str(azcp))
+
+
+# import subprocess
+
+# def install_package(package_name):
+#     try:
+#         # Ejecutar el comando de instalación de pip
+#         subprocess.check_call(['C:\\Python3\\3.9.7\\python.exe','-m','pip', 'install', package_name])
+#         print(f"El paquete '{package_name}' ha sido instalado correctamente.")
+#     except subprocess.CalledProcessError as e:
+#         print(f"Error al instalar el paquete '{package_name}': {e}")
+
+# # Nombre del paquete que deseas instalar
+# package_name = 'azcp-wrapper'
+# install_package(package_name)
