@@ -59,8 +59,9 @@ def get_transfer_list_summary_info(
     file_data = []
 
     # Usar una expresión regular para encontrar todos los pares archivo-tamaño
+    filtered_text = "\n".join(line for line in summary.splitlines() if "; Content Length:" in line)
     pattern = re.compile(r"([^;]+); Content Length: ([\d.]+ \w+)")
-    matches = pattern.findall(summary)
+    matches = pattern.findall(filtered_text)
 
     # Rellenar la lista con los datos encontrados
     for match in matches:
