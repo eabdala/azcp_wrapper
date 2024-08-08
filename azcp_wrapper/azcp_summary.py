@@ -26,6 +26,7 @@ def get_property_value(key: str, job_summary: str) -> int:
     return property_value
 
 
+
 def get_transfer_list_summary_info(
     job_info: AzListJobInfo, summary: str
 ) -> AzListJobInfo:
@@ -45,19 +46,20 @@ def get_transfer_list_summary_info(
         # Set the attribute in job_info object
         setattr(job_info, property_attribute, property_value)
     
-    patron = r"INFO: Total file size: (\d+\.\d+) (\w+)"
+    patron = r"Total file size: (\d+\.\d+) (\w+)"
+
 
     # Buscar coincidencias en la cadena
     coincidencias = re.search(patron, summary)
     if coincidencias:
         tamanio = coincidencias.group(1)  # El número
         tipo = coincidencias.group(2)     # El tipo (MiB en este caso)
-    job_info.total_file_size = f"{tamanio} {tipo}"
+        job_info.total_file_size = f"{tamanio} {tipo}"
     # Crear una lista para almacenar los datos
     file_data = []
 
     # Usar una expresión regular para encontrar todos los pares archivo-tamaño
-    pattern = re.compile(r"INFO: ([^;]+);  Content Length: ([\d.]+ \w+)")
+    pattern = re.compile(r"([^;]+); Content Length: ([\d.]+ \w+)")
     matches = pattern.findall(summary)
 
     # Rellenar la lista con los datos encontrados
@@ -68,6 +70,7 @@ def get_transfer_list_summary_info(
 
     job_info.list_files = file_data
     return job_info
+
 
 
 def get_transfer_copy_summary_info(
