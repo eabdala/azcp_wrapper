@@ -3,7 +3,7 @@ from pathlib import Path
 import logging
 # from haikunator import Haikunator
 from datetime import datetime
-
+import sys
 home = Path.home() / '.azcp'
 
 ROOT_LOG_DIRECTORY = home if home.expanduser().exists() else Path.cwd()
