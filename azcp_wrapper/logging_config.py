@@ -85,7 +85,7 @@ class CopyLogger:
         self._configure_path_envs()
 
         # Setup file and console logger
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger(__name__)
         self.logger.setLevel(self.log_level)
         
         handler = logging.FileHandler(str(self.run_log_directory / self.run_name))
