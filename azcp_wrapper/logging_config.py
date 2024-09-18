@@ -91,12 +91,17 @@ class CopyLogger:
         handler = logging.FileHandler(str(self.run_log_directory / self.run_name))
         handler.setFormatter(logging.Formatter('%(asctime)s - [%(levelname)s] - %(message)s'))
         
-        handler_error = logging.StreamHandler()
-        handler_error.setLevel(self.log_level)
+        handler_error = logging.StreamHandler(sys.stderr)
+        handler_error.setLevel(logging.ERROR)
         handler_error.setFormatter(logging.Formatter('%(asctime)s - [%(levelname)s] - %(message)s'))
+
+        handler_ok = logging.StreamHandler(sys.stdout)
+        handler_ok.setLevel(self.log_level)
+        handler_ok.setFormatter(logging.Formatter('%(asctime)s - [%(levelname)s] - %(message)s'))
 
         self.logger.addHandler(handler)
         self.logger.addHandler(handler_error)
+        self.logger.addHandler(handler_ok)
 
     def _configure_path_envs(self):
         """Sets the AZCOPY_JOB_PLAN_LOCATION and AZCOPY_LOG_LOCATION environment variables."""
